@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-3">
+                    <div>
+                        <h1 class="h2 mb-1">{{ player.name }}</h1>
+                        <p class="text-muted mb-0">{{ player.team }} • {{ player.role }}</p>
+                    </div>
+                    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Back</a>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6"><div class="info-chip"><strong>Nationality:</strong> {{ player.nationality }}</div></div>
+                    <div class="col-md-6"><div class="info-chip"><strong>Matches:</strong> {{ player.matches }}</div></div>
+                    <div class="col-md-6"><div class="info-chip"><strong>Batting Style:</strong> {{ player.batting_style }}</div></div>
+                    <div class="col-md-6"><div class="info-chip"><strong>Bowling Style:</strong> {{ player.display_bowling_style }}</div></div>
+                    <div class="col-md-6"><div class="info-chip"><strong>Strike Rate:</strong> {{ player.strike_rate }}</div></div>
+                    <div class="col-md-6"><div class="info-chip"><strong>Status:</strong> {{ player.status }}</div></div>
+                    <div class="col-md-6"><div class="info-chip price-start"><strong>Auction Starting Price:</strong> ₹{{ '{:,.0f}'.format(player.base_price) }}</div></div>
+                    <div class="col-md-6"><div class="info-chip price-current"><strong>Current Quotation:</strong> ₹{{ '{:,.0f}'.format(player.current_price) }}</div></div>
+                </div>
+
+                <div class="alert alert-warning rounded-4">
+                    <strong>Rule:</strong> quotation can only move upward. It cannot go below the starting price or below the current quote.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3">Place a New Bid</h2>
+                <form method="POST" action="{{ url_for('place_bid', player_id=player.id) }}">
+                    <div class="mb-3">
+                        <label class="form-label">Bidder / Team Name</label>
+                        <input class="form-control" type="text" name="bidder_name" placeholder="Enter bidder name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bid Amount (₹)</label>
+                        <input class="form-control" type="number" name="bid_amount" min="{{ player.current_price }}" step="1000" required>
+                        <div class="form-text">Minimum allowed: greater than ₹{{ '{:,.0f}'.format(player.current_price) }}</div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Update Quotation</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3">Bid History</h2>
+                {% if history %}
+                    <div class="timeline-list">
+                        {% for bid in history %}
+                            <div class="timeline-item">
+                                <div class="d-flex justify-content-between gap-3 flex-wrap">
+                                    <strong>{{ bid.bidder_name }}</strong>
+                                    <span class="text-success fw-bold">₹{{ '{:,.0f}'.format(bid.bid_amount) }}</span>
+                                </div>
+                                <small class="text-muted">{{ bid.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted mb-0">No bids yet. The player is still at the auction starting price.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

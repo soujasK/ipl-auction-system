@@ -1,0 +1,76 @@
+body {
+    background: linear-gradient(180deg, #eef5ff 0%, #ffffff 100%);
+    min-height: 100vh;
+}
+
+.hero-nav {
+    background: linear-gradient(90deg, #0d1b4c 0%, #102d83 100%);
+}
+
+.hero-banner {
+    background: linear-gradient(135deg, #0f4c81 0%, #1f8dd6 100%);
+    color: #fff;
+}
+
+.footer-bg {
+    background: #0d1b4c;
+    margin-top: 40px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 18px;
+    padding: 16px 10px;
+    backdrop-filter: blur(4px);
+}
+
+.stat-card h3,
+.stat-card p {
+    margin: 0;
+}
+
+.stat-card h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.stat-card p {
+    font-size: 0.84rem;
+    opacity: 0.95;
+}
+
+.info-chip {
+    background: #f8f9fb;
+    border: 1px solid #e5e9f2;
+    border-radius: 16px;
+    padding: 14px 16px;
+}
+
+.price-start {
+    background: #fff7e6;
+    border-color: #ffd77a;
+}
+
+.price-current {
+    background: #eafaf0;
+    border-color: #9ad9b1;
+}
+
+.timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.timeline-item {
+    border-left: 4px solid #0d6efd;
+    padding: 10px 14px;
+    background: #f8fbff;
+    border-radius: 0 14px 14px 0;
+}
+
+.table td,
+.table th {
+    white-space: nowrap;
+}

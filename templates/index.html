@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-4 p-md-5 rounded-4 hero-banner mb-4">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+            <h1 class="display-6 fw-bold mb-3">Manage IPL Players, Quotes, and Auction Starting Prices</h1>
+            <p class="lead mb-0">Search any player, filter by Indian/Overseas, and check strike rate, team, role, and current quotation. Price can only move upward, never downward.</p>
+        </div>
+        <div class="col-lg-4">
+            <div class="row g-3">
+                <div class="col-4">
+                    <div class="stat-card text-center">
+                        <h3>{{ total_players }}</h3>
+                        <p>Total Players</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card text-center">
+                        <h3>{{ indian_players }}</h3>
+                        <p>Indian</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="stat-card text-center">
+                        <h3>₹{{ '{:,.0f}'.format(highest_bid) }}</h3>
+                        <p>Top Quote</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-4">
+        <form method="GET" action="{{ url_for('index') }}">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Search Player</label>
+                    <input type="text" class="form-control" name="search" value="{{ search }}" placeholder="Enter player name">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Nationality</label>
+                    <select class="form-select" name="nationality">
+                        <option value="">All</option>
+                        {% for item in nationalities %}
+                            <option value="{{ item }}" {% if selected_nationality == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" name="role">
+                        <option value="">All</option>
+                        {% for item in roles %}
+                            <option value="{{ item }}" {% if selected_role == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Team</label>
+                    <select class="form-select" name="team">
+                        <option value="">All</option>
+                        {% for item in teams %}
+                            <option value="{{ item }}" {% if selected_team == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Sort By</label>
+                    <select class="form-select" name="sort_by">
+                        <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>Name</option>
+                        <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Current Price</option>
+                        <option value="strike_rate_desc" {% if selected_sort == 'strike_rate_desc' %}selected{% endif %}>Strike Rate</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-grid align-items-end">
+                    <label class="form-label text-white d-none d-md-block">.</label>
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h2 class="h4 mb-0">Player Directory</h2>
+    <form method="POST" action="{{ url_for('reset_demo_data') }}">
+        <button type="submit" class="btn btn-outline-danger btn-sm">Reset Demo Data</button>
+    </form>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Player</th>
+                    <th>Nationality</th>
+                    <th>Role</th>
+                    <th>Team</th>
+                    <th>Strike Rate</th>
+                    <th>Starting Price</th>
+                    <th>Current Quote</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                    <tr>
+                        <td class="fw-semibold">{{ player.name }}</td>
+                        <td>{{ player.nationality }}</td>
+                        <td>{{ player.role }}</td>
+                        <td>{{ player.team }}</td>
+                        <td>{{ player.strike_rate }}</td>
+                        <td>₹{{ '{:,.0f}'.format(player.base_price) }}</td>
+                        <td class="text-success fw-bold">₹{{ '{:,.0f}'.format(player.current_price) }}</td>
+                        <td><span class="badge text-bg-info">{{ player.status }}</span></td>
+                        <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('player_detail', player_id=player.id) }}">View</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center py-4">No players found for the selected filters.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
